@@ -20,11 +20,14 @@
 //#![warn(clippy::cargo, clippy::restriction, missing_docs, warnings)]
 //#![deny(clippy::missing_errors_doc, warnings)]
 
+mod adapters;
 mod args;
 pub mod consts;
 pub mod error;
+mod node_traverser;
+pub mod ports;
 
-pub use args::Args;
+pub use {args::Args, node_traverser::NodeTraverser};
 use error::Result;
 
 #[allow(clippy::missing_const_for_fn, clippy::needless_pass_by_value)] //remove when `lib_main` impl'ed
