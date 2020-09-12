@@ -1,0 +1,45 @@
+[package]
+authors = ["sergibli"]
+categories = []
+edition = "2018"
+keywords = []
+license = "MIT OR Apache-2.0"
+name = "async_graph_exercise"
+readme = "README.md"
+repository = "https://github.com/u007d/async_graph_exercise"
+version = "0.1.0"
+
+[lib]
+name = "lib"
+path = "src/lib.rs"
+
+[dependencies]
+structopt = "0.3"
+thiserror = "1"
+
+[dev-dependencies]
+assert2 = "0.3"
+
+[profile.dev]
+debug = true
+debug-assertions = true
+lto = false
+opt-level = 0
+panic = "unwind"
+rpath = false
+
+[profile.release]
+codegen-units = 1
+debug = false
+debug-assertions = false
+lto = "fat"
+opt-level = 3
+panic = "unwind"
+rpath = false
+
+[profile.test]
+debug = true
+debug-assertions = true
+lto = false
+opt-level = 0
+rpath = false
