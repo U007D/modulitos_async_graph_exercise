@@ -1,3 +1,4 @@
+#![feature(async_closure)]
 // To use the `unsafe` keyword, change to `#![allow(unsafe_code)]` (do not remove); aids auditing.
 #![forbid(unsafe_code)]
 #![forbid(bare_trait_objects)]

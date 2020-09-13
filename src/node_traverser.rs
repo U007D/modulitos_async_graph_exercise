@@ -1,19 +1,40 @@
-use crate::{error::Result, ports::Client};
-
+mod ids;
+mod node;
+mod state;
 #[cfg(test)]
 mod unit_tests;
 
+use crate::{error::client::Result, ports::Client};
+use async_std::task;
+use futures::executor::block_on;
+use ids::Ids;
+use node::{Node, NodeId};
+use state::State;
+
 #[derive(Debug)]
-pub struct NodeTraverser<C: Client> {
-    client: C,
+pub struct NodeTraverser<C: Client + Send> {
+    client:    C,
+    known_ids: Ids,
 }
 
-impl<C: Client> NodeTraverser<C> {
+impl<C> NodeTraverser<C>
+where
+    C: Client + Send + Sync,
+{
     pub fn new(client: C) -> Self {
-        Self { client }
+        Self {
+            client,
+            known_ids: Ids::new(),
+        }
     }
 
-    pub fn get<S: AsRef<str>>(&self, tgt: S) -> Result<String> {
-        self.client.get(tgt.as_ref())
+    pub async fn get<S>(&self, tgt: S) -> Result<Node>
+    where
+        S: AsRef<str> + Send + Sync, {
+        let node = serde_json::from_str::<Node>(&self.client.get(tgt.as_ref()).await?)?;
+        node.children().iter().for_each(|&node_id| {
+            block_on(self.known_ids.push_unique(node_id));
+        });
+        Ok(node)
     }
 }

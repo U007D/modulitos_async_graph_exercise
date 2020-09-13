@@ -1,3 +1,4 @@
+pub mod error_string;
 pub mod client;
 use crate::consts::msg;
 use std::ffi::OsString;
